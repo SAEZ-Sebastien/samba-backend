@@ -1,13 +1,15 @@
 package fr.miage.samba.backend;
-
 import org.junit.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+		import org.junit.runner.RunWith;
+		import org.springframework.boot.test.context.SpringBootTest;
+		import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest
-class BackendApplicationTests {
+public class BackendApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
 	}
 
 }
