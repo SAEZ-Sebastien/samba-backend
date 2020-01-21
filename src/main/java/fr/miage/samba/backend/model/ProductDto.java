@@ -1,8 +1,11 @@
 package fr.miage.samba.backend.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Document(collection = "product")
 public class ProductDto {
     private String title;
     private String description;
