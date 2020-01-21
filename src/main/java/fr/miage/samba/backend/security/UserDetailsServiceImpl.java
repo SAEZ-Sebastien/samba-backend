@@ -13,9 +13,9 @@ import static java.util.Collections.emptyList;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+
     @Autowired
     private UserDao userDao;
-
 
     @Override
     public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
