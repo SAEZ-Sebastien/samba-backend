@@ -16,6 +16,11 @@ public class UserServiceImpl  implements UserService{
     }
 
     @Override
+    public UserDto getUserByMail(String mail) {
+        return this.userDao.getUserDtoByMail(mail);
+    }
+
+    @Override
     public UserDto addUser(UserDto user) {
         System.out.println(user);
         return this.userDao.save(user);

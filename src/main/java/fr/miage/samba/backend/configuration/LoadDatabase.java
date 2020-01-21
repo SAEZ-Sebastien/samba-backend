@@ -20,7 +20,7 @@ class LoadDatabase {
     CommandLineRunner initDatabase(UserDao userDao, ProductDao productDao ) {
         return args -> {
             userDao.deleteAll();
-            UserDto user = new UserDto("admin","admin");
+            UserDto user = new UserDto("admin","admin","admin@gmail.com");
             user.setId(ObjectId.get());
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             log.info("Preloading " + userDao.save(user));

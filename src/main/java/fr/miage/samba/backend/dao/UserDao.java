@@ -8,4 +8,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(collectionResourceRel = "users", path = "users")
 public interface UserDao extends MongoRepository<UserDto, String> {
     public UserDto getUserDtoByUsername(@Param("username") String username);
+    public UserDto getUserDtoByMail(@Param("mail") String mail);
 }

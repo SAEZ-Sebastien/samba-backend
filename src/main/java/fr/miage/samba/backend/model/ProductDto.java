@@ -9,7 +9,7 @@ public class ProductDto {
     private double prix;
     private String mainPicture;
     private List<String> picturesDetails = new ArrayList<String>();
-    private UserDto vendeur;
+    private String vendeurUsername;
     private int etatNotation;
 
     public ProductDto(String title, String description, double prix) {

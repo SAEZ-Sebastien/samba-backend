@@ -17,7 +17,7 @@ public class UserDto{
     private String mail;
     private List<AvisDto> avis = new ArrayList<AvisDto>();
     private AdresseDto adresseLivraison;
-    private AdresseDto adresseDtoFacturation;
+    private AdresseDto adresseFacturation;
     private boolean isCertified;
     private double notation;
     private List<CommandeDto> commandes = new ArrayList<CommandeDto>();
@@ -27,9 +27,10 @@ public class UserDto{
 
     }
 
-    public UserDto(String username, String password){
+    public UserDto(String username, String password, String mail){
         this.username = username;
         this.password = password;
+        this.mail = mail;
     }
 
     public String getPassword() {
@@ -54,5 +55,13 @@ public class UserDto{
 
     public void setId(ObjectId id) {
         this.id = id.toHexString();
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 }
