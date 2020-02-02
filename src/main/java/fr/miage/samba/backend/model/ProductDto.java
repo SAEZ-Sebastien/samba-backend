@@ -1,6 +1,8 @@
 package fr.miage.samba.backend.model;
 
 import lombok.Data;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -9,18 +11,33 @@ import java.util.List;
 @Data
 @Document(collection = "product")
 public class ProductDto {
+
+    @Id
+    private  String id;
     private String title;
     private String description;
     private double prix;
-    private String mainPicture;
-    private List<String> picturesDetails = new ArrayList<String>();
+    //private String mainPicture;
+   // private List<String> picturesDetails = new ArrayList<String>();
     private String vendeurUsername;
-    private int etatNotation;
+    //private int etatNotation;
+
+    public ProductDto(){
+
+    }
 
     public ProductDto(String title, String description, double prix) {
         this.title = title;
         this.description = description;
         this.prix = prix;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id.toHexString();
     }
 
     public String getTitle() {

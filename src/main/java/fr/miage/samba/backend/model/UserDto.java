@@ -15,8 +15,8 @@ import java.util.List;
 public class UserDto{
 
     @Id
-    private  String id;
-    private  String username;
+    private String id;
+    private String username;
     private String password;
     private String mail;
     private List<AvisDto> avis = new ArrayList<AvisDto>();
@@ -24,7 +24,6 @@ public class UserDto{
     private AdresseDto adresseFacturation;
     private boolean isCertified;
     private double notation;
-    private List<CommandeDto> commandes = new ArrayList<CommandeDto>();
     private String avatarUrl;
 
     public UserDto(){

@@ -1,14 +1,22 @@
 package fr.miage.samba.backend.web.controller;
 
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import fr.miage.samba.backend.model.ProductDto;
 import fr.miage.samba.backend.services.ProductService;
+import fr.miage.samba.backend.web.exceptions.ProductNotFound;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping(value ="/products")
 @RestController
@@ -25,17 +33,39 @@ public class ProductController {
 
     //Get Specified
     @GetMapping("/{id}")
-    public ProductDto getProductDetails(@PathVariable Long id){
-        return null;
+    public ProductDto getProductDetails(@PathVariable String id){
+        Optional<ProductDto> requestResult = productService.getDetailsOfProduitById(id);
+
+        if(!requestResult.isPresent()){
+            throw new ProductNotFound();
+        }
+
+        return productService.getDetailsOfProduitById(id).get();
     }
 
-    //Get Sorted
+    //Get Specified
+    @DeleteMapping("/{id}")
+    public void removeProductById(@PathVariable String id){
+        this.productService.remove(id);
+    }
 
-    //Update product
+    //Ajouter un produit
+    @PostMapping()
+    public Object ajouterProduit( @Valid @RequestBody ProductDto product) {
+
+        product.setId(ObjectId.get());
+        ProductDto productAdded =  this.productService.addProduct(product);
+
+        if (productAdded == null)
+            return ResponseEntity.noContent().build();
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(productAdded.getId())
+                .toUri();
 
 
-    //Add product
-
-
-    //delete product
+        return ResponseEntity.created(location).body(product);
+    }
 }
