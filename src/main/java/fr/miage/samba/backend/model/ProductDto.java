@@ -17,10 +17,10 @@ public class ProductDto {
     private  String id;
     private String title;
     private String description;
-    private double prix;
+    private double price;
     //private String mainPicture;
    // private List<String> picturesDetails = new ArrayList<String>();
-    private String vendeurId;
+    private String sellerId;
     //private int etatNotation;
 
     public ProductDto(){
@@ -30,7 +30,7 @@ public class ProductDto {
     public ProductDto(String title, String description, double prix) {
         this.title = title;
         this.description = description;
-        this.prix = prix;
+        this.price = prix;
     }
 
     public String getId() {
@@ -58,11 +58,11 @@ public class ProductDto {
     }
 
     public double getPrix() {
-        return prix;
+        return price;
     }
 
     public void setPrix(double prix) {
-        this.prix = prix;
+        this.price = prix;
     }
 
 }
