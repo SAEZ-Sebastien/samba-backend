@@ -60,7 +60,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse res,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
-        PrintWriter out = res.getWriter();
+
         res.setContentType("application/json");
         res.setCharacterEncoding("UTF-8");
 
@@ -78,7 +78,5 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             CacheHelper.removeFromCache(username);
             CacheHelper.addToCache(username,token);
         }
-        out.print("{\"token\":\"" + token + "\"}");
-        out.flush();
     }
 }

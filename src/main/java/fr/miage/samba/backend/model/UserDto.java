@@ -69,7 +69,7 @@ public class UserDto{
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username.toUpperCase();
     }
 
     public String getId() {
@@ -85,6 +85,6 @@ public class UserDto{
     }
 
     public void setMail(String mail) {
-        this.mail = mail;
+        this.mail = mail.toUpperCase();
     }
 }

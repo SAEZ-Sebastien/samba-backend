@@ -77,7 +77,6 @@ public class UserController {
             @Valid
             @RequestBody
                     UserDto user) {
-
         if(user.getPassword().isEmpty() || user.getFirstName().isEmpty() || user.getLastName().isEmpty() || user.getUsername().isEmpty() || user.getMail().isEmpty()){
             throw new EmptyField();
         }
@@ -101,8 +100,6 @@ public class UserController {
 
         user.setId(ObjectId.get());
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        user.setUsername(user.getUsername().toUpperCase());
-        user.setMail(user.getMail().toUpperCase());
         UserDto userAdded =  this.userService.addUser(user);
 
         MappingJacksonValue users = new MappingJacksonValue(userAdded);
