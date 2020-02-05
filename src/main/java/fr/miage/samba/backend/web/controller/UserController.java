@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import fr.miage.samba.backend.RegexEnum.Regex;
 import fr.miage.samba.backend.model.UserDto;
+import fr.miage.samba.backend.security.TokenHelper;
 import fr.miage.samba.backend.services.UserService;
 import fr.miage.samba.backend.web.exceptions.*;
 import org.bson.types.ObjectId;
@@ -53,19 +54,14 @@ public class UserController {
         }
 
         MappingJacksonValue user = new MappingJacksonValue(requestResult.get());
-        String auth_token = request.getHeader(HEADER_STRING);
 
-
-
-        if(auth_token != null && !auth_token.trim().isEmpty()){
-            DecodedJWT claims = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
-                    .build()
-                    .verify(auth_token.replace(TOKEN_PREFIX, ""));
-            isOwner = id.equals(userService.getUserByUsername(claims.getSubject()).getId());
+        String userId = TokenHelper.extractSubjectOf(request);
+        UserDto userDto = userService.getUserByUsername(userId);
+        if(userDto != null) {
+            isOwner = id.equals(userDto.getId());
         }
 
         user.setFilters(getFilterForUsers(isOwner));
-
 
         return user;
     }
