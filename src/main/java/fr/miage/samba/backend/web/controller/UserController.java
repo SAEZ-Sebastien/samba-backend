@@ -1,10 +1,12 @@
 package fr.miage.samba.backend.web.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import fr.miage.samba.backend.RegexEnum.Regex;
-import fr.miage.samba.backend.configuration.CacheHelper;
 import fr.miage.samba.backend.model.UserDto;
 import fr.miage.samba.backend.services.UserService;
 import fr.miage.samba.backend.web.exceptions.*;
@@ -19,10 +21,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import static fr.miage.samba.backend.security.SecurityConstants.HEADER_STRING;
+import static fr.miage.samba.backend.security.SecurityConstants.SECRET;
+import static fr.miage.samba.backend.security.SecurityConstants.TOKEN_PREFIX;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -51,8 +54,14 @@ public class UserController {
 
         MappingJacksonValue user = new MappingJacksonValue(requestResult.get());
         String auth_token = request.getHeader(HEADER_STRING);
-        if(auth_token != null){
-            isOwner = auth_token.equals(CacheHelper.getValue(requestResult.get().getUsername()));
+
+
+
+        if(auth_token != null && !auth_token.trim().isEmpty()){
+            DecodedJWT claims = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
+                    .build()
+                    .verify(auth_token.replace(TOKEN_PREFIX, ""));
+            isOwner = id.equals(userService.getUserByUsername(claims.getSubject()).getId());
         }
 
         user.setFilters(getFilterForUsers(isOwner));

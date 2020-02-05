@@ -58,7 +58,7 @@ public class ProductController {
     @PostMapping()
     public Object ajouterProduit( @Valid @RequestBody ProductDto product) {
 
-        if(product.getDescription().isEmpty() || product.getTitle().isEmpty() || product.getVendeurId().isEmpty()){
+        if(product.getDescription().isEmpty() || product.getTitle().isEmpty() || product.getSellerId().isEmpty()){
             throw new EmptyField();
         }
         if(product.getPrix() <= 0){

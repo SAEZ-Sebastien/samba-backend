@@ -2,28 +2,19 @@ package fr.miage.samba.backend.security;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.miage.samba.backend.configuration.CacheHelper;
-import fr.miage.samba.backend.dao.UserDao;
 import fr.miage.samba.backend.model.UserDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -71,12 +62,5 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         res.addHeader(HEADER_STRING, token);
 
-        String username = ((User) auth.getPrincipal()).getUsername();
-        if(CacheHelper.getValue(username) == null){
-            CacheHelper.addToCache(username,token);
-        }else{
-            CacheHelper.removeFromCache(username);
-            CacheHelper.addToCache(username,token);
-        }
     }
 }
