@@ -82,7 +82,7 @@ public class UserController {
             throw new EmptyField();
         }
 
-        if(!Regex.REGEX_MAIL.getPattern().matcher(user.getUsername()).matches()){
+        if(!Regex.REGEX_MAIL.getPattern().matcher(user.getMail()).matches()){
             throw new IncorrectMailFormat();
         }
 
@@ -101,6 +101,8 @@ public class UserController {
 
         user.setId(ObjectId.get());
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setUsername(user.getUsername().toUpperCase());
+        user.setMail(user.getMail().toUpperCase());
         UserDto userAdded =  this.userService.addUser(user);
 
         MappingJacksonValue users = new MappingJacksonValue(userAdded);

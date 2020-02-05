@@ -19,8 +19,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        username = username.toUpperCase();
         UserDto user = userDao.getUserDtoByUsername(username);
-
+        
         if (user == null) {
             user = userDao.getUserDtoByMail(username);
             if(user == null){
