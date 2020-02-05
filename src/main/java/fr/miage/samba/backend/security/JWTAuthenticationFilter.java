@@ -2,13 +2,21 @@ package fr.miage.samba.backend.security;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.miage.samba.backend.configuration.CacheHelper;
+import fr.miage.samba.backend.dao.UserDao;
 import fr.miage.samba.backend.model.UserDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -52,18 +60,25 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse res,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
-
-        String token = JWT.create()
-                .withSubject(((User) auth.getPrincipal()).getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .sign(HMAC512(SECRET.getBytes()));
-        res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
-
         PrintWriter out = res.getWriter();
         res.setContentType("application/json");
         res.setCharacterEncoding("UTF-8");
-        out.print("{\" token \" : \"" + TOKEN_PREFIX + token + "\"}");
-        out.flush();
 
+        String token = TOKEN_PREFIX + JWT.create()
+                .withSubject(((User) auth.getPrincipal()).getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .sign(HMAC512(SECRET.getBytes()));
+
+        res.addHeader(HEADER_STRING, token);
+
+        String username = ((User) auth.getPrincipal()).getUsername();
+        if(CacheHelper.getValue(username) == null){
+            CacheHelper.addToCache(username,token);
+        }else{
+            CacheHelper.removeFromCache(username);
+            CacheHelper.addToCache(username,token);
+        }
+        out.print("{\"token\":\"" + token + "\"}");
+        out.flush();
     }
 }

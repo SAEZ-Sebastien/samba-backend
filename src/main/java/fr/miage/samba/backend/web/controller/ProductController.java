@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import fr.miage.samba.backend.model.ProductDto;
 import fr.miage.samba.backend.services.ProductService;
+import fr.miage.samba.backend.web.exceptions.EmptyField;
+import fr.miage.samba.backend.web.exceptions.IncorrectProductPrice;
 import fr.miage.samba.backend.web.exceptions.ProductNotFound;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,13 @@ import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+
+import static fr.miage.samba.backend.security.SecurityConstants.HEADER_STRING;
 
 @RequestMapping(value ="/products")
 @RestController
@@ -33,7 +38,7 @@ public class ProductController {
 
     //Get Specified
     @GetMapping("/{id}")
-    public ProductDto getProductDetails(@PathVariable String id){
+    public ProductDto getProductDetails(HttpServletRequest request, @PathVariable String id){
         Optional<ProductDto> requestResult = productService.getDetailsOfProduitById(id);
 
         if(!requestResult.isPresent()){
@@ -53,6 +58,12 @@ public class ProductController {
     @PostMapping()
     public Object ajouterProduit( @Valid @RequestBody ProductDto product) {
 
+        if(product.getDescription().isEmpty() || product.getTitle().isEmpty() || product.getVendeurId().isEmpty()){
+            throw new EmptyField();
+        }
+        if(product.getPrix() <= 0){
+            throw new IncorrectProductPrice();
+        }
         product.setId(ObjectId.get());
         ProductDto productAdded =  this.productService.addProduct(product);
 

@@ -19,14 +19,14 @@ class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(UserDao userDao, ProductDao productDao ) {
         return args -> {
-            userDao.deleteAll();
+           /* userDao.deleteAll();
             UserDto user = new UserDto("admin","admin","admin@gmail.com");
             user.setId(ObjectId.get());
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             log.info("Preloading " + userDao.save(user));
 
             productDao.deleteAll();
-            log.info("Preloading " + productDao.save(new ProductDto("Iphone","Iphone 64go",1200.50)));
+            log.info("Preloading " + productDao.save(new ProductDto("Iphone","Iphone 64go",1200.50)));*/
         };
     }
 

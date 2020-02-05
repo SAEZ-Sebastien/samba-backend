@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 
 import static fr.miage.samba.backend.security.SecurityConstants.PRODUCT_URL;
 import static fr.miage.samba.backend.security.SecurityConstants.SIGN_UP_URL;
+import static fr.miage.samba.backend.security.SecurityConstants.USERS_URL;
 
 
 @Configuration
@@ -31,6 +32,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.GET, PRODUCT_URL + "/**").permitAll()
+                .antMatchers(HttpMethod.GET, USERS_URL + "/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

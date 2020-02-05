@@ -1,5 +1,6 @@
 package fr.miage.samba.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -19,7 +20,7 @@ public class ProductDto {
     private double prix;
     //private String mainPicture;
    // private List<String> picturesDetails = new ArrayList<String>();
-    private String vendeurUsername;
+    private String vendeurId;
     //private int etatNotation;
 
     public ProductDto(){

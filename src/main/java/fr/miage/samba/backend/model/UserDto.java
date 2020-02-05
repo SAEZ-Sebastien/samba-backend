@@ -1,5 +1,6 @@
 package fr.miage.samba.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.bson.types.ObjectId;
@@ -12,10 +13,13 @@ import java.util.List;
 
 @Data
 @Document(collection = "user")
+@JsonFilter("OwnerFilter")
 public class UserDto{
 
     @Id
     private String id;
+    private String lastName;
+    private String firstName;
     private String username;
     private String password;
     private String mail;
@@ -34,6 +38,22 @@ public class UserDto{
         this.username = username;
         this.password = password;
         this.mail = mail;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String lastName) {
+        this.firstName = lastName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPassword() {
