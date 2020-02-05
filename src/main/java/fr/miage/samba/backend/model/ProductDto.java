@@ -41,28 +41,4 @@ public class ProductDto {
         this.id = id.toHexString();
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrix() {
-        return price;
-    }
-
-    public void setPrix(double prix) {
-        this.price = prix;
-    }
-
 }

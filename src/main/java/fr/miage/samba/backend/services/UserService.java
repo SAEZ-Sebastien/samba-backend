@@ -16,6 +16,4 @@ public interface UserService {
     UserDto addUser(UserDto user);
 
     List<UserDto> getUsers();
-
-    UserDto getMyDetails(String id);
 }

@@ -38,9 +38,4 @@ public class UserServiceImpl  implements UserService{
     public List<UserDto> getUsers() {
         return this.userDao.findAll();
     }
-
-    @Override
-    public UserDto getMyDetails(String id) {
-        return null;
-    }
 }
