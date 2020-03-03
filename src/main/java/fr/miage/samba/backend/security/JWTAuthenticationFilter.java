@@ -3,6 +3,8 @@ package fr.miage.samba.backend.security;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.miage.samba.backend.model.UserDto;
+import fr.miage.samba.backend.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,9 +25,11 @@ import static fr.miage.samba.backend.security.SecurityConstants.*;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
+    private UserService userService;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, UserService userService) {
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
     }
 
     @Override
@@ -54,9 +58,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         res.setContentType("application/json");
         res.setCharacterEncoding("UTF-8");
-
+        UserDto user = userService.getUserByUsername(((User) auth.getPrincipal()).getUsername());
         String token = TOKEN_PREFIX + JWT.create()
-                .withSubject(((User) auth.getPrincipal()).getUsername())
+                .withSubject(user.getId())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(HMAC512(SECRET.getBytes()));
 

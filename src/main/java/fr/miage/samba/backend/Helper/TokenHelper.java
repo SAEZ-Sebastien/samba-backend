@@ -1,4 +1,4 @@
-package fr.miage.samba.backend.security;
+package fr.miage.samba.backend.Helper;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

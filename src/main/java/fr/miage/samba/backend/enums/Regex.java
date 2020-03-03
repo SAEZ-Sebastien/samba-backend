@@ -1,4 +1,4 @@
-package fr.miage.samba.backend.RegexEnum;
+package fr.miage.samba.backend.enums;
 
 import java.util.regex.Pattern;
 

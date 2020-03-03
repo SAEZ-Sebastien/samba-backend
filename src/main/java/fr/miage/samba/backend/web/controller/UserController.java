@@ -1,14 +1,11 @@
 package fr.miage.samba.backend.web.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import fr.miage.samba.backend.RegexEnum.Regex;
+import fr.miage.samba.backend.enums.Regex;
 import fr.miage.samba.backend.model.UserDto;
-import fr.miage.samba.backend.security.TokenHelper;
+import fr.miage.samba.backend.Helper.TokenHelper;
 import fr.miage.samba.backend.services.UserService;
 import fr.miage.samba.backend.web.exceptions.*;
 import org.bson.types.ObjectId;
@@ -24,18 +21,12 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.Optional;
 
-import static fr.miage.samba.backend.security.SecurityConstants.HEADER_STRING;
-import static fr.miage.samba.backend.security.SecurityConstants.SECRET;
-import static fr.miage.samba.backend.security.SecurityConstants.TOKEN_PREFIX;
-
 @RestController
 @RequestMapping(value = "/users")
 public class UserController {
 
-
     @Autowired
     UserService userService;
-
 
     //Get all
     @GetMapping()
@@ -56,9 +47,9 @@ public class UserController {
         MappingJacksonValue user = new MappingJacksonValue(requestResult.get());
 
         String userId = TokenHelper.extractSubjectOf(request);
-        UserDto userDto = userService.getUserByUsername(userId);
-        if(userDto != null) {
-            isOwner = id.equals(userDto.getId());
+
+        if(!userId.trim().isEmpty()) {
+            isOwner = id.equals(userId);
         }
 
         user.setFilters(getFilterForUsers(isOwner));

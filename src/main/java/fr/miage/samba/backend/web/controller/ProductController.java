@@ -1,14 +1,8 @@
 package fr.miage.samba.backend.web.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import fr.miage.samba.backend.Helper.NotationHelper;
 import fr.miage.samba.backend.model.ProductDto;
-import fr.miage.samba.backend.model.UserDto;
-import fr.miage.samba.backend.security.TokenHelper;
+import fr.miage.samba.backend.Helper.TokenHelper;
 import fr.miage.samba.backend.services.ProductService;
 import fr.miage.samba.backend.services.UserService;
 import fr.miage.samba.backend.web.exceptions.EmptyField;
@@ -17,7 +11,6 @@ import fr.miage.samba.backend.web.exceptions.ProductNotFound;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -27,10 +20,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-
-import static fr.miage.samba.backend.security.SecurityConstants.HEADER_STRING;
-import static fr.miage.samba.backend.security.SecurityConstants.SECRET;
-import static fr.miage.samba.backend.security.SecurityConstants.TOKEN_PREFIX;
 
 @RequestMapping(value ="/products")
 @RestController
@@ -62,7 +51,7 @@ public class ProductController {
 
     //Get Specified
     @DeleteMapping("/{id}")
-    public void removeProductById(HttpServletRequest request,@PathVariable String id){
+    public void removeProductById(HttpServletRequest request, @PathVariable String id){
 
         Optional<ProductDto> requestResult = productService.getDetailsOfProduitById(id);
 
@@ -72,10 +61,8 @@ public class ProductController {
 
         String userId = TokenHelper.extractSubjectOf(request);
         String sellerId = requestResult.get().getSellerId();
-        UserDto user = userService.getUserByUsername(userId);
 
-        if(sellerId != null && !sellerId.trim().isEmpty() && user != null
-                && requestResult.get().getSellerId().equals(user.getId())){
+        if(sellerId != null && !sellerId.trim().isEmpty() && sellerId.equals(userId)){
             this.productService.remove(id);
         }else{
             throw new AccessDeniedException("You aren't allow to delete this element");
@@ -84,15 +71,30 @@ public class ProductController {
 
     //Ajouter un produit
     @PostMapping()
-    public Object ajouterProduit( @Valid @RequestBody ProductDto product) {
+    public Object ajouterProduit( HttpServletRequest request, @Valid @RequestBody ProductDto product) {
 
-        if(product.getDescription().isEmpty() || product.getTitle().isEmpty() || product.getSellerId().isEmpty()){
+        if(product.getTitle().isEmpty()
+                || product.getProductSpecifications() == null
+                || product.getProductSpecifications().getScreenState() == null
+                || product.getProductSpecifications().getShellState() == null
+                || product.getProductSpecifications().getButtonsSpecifications() == null
+                || product.getProductSpecifications().getCameraSpecifications() == null){
             throw new EmptyField();
         }
         if(product.getPrice() <= 0){
             throw new IncorrectProductPrice();
         }
         product.setId(ObjectId.get());
+
+        String userId = TokenHelper.extractSubjectOf(request);
+
+        if(userId.trim().isEmpty()){
+            throw new EmptyField();
+        }
+
+        product.setSellerId(userId);
+        product.setScore(NotationHelper.getGlobalScoreOf(product.getProductSpecifications()));
+
         ProductDto productAdded =  this.productService.addProduct(product);
 
         if (productAdded == null)
