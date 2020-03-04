@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -73,7 +74,11 @@ public class UserController {
             @Valid
             @RequestBody
                     UserDto user) {
-        if(user.getPassword().isEmpty() || user.getFirstName().isEmpty() || user.getLastName().isEmpty() || user.getUsername().isEmpty() || user.getMail().isEmpty()){
+        if(StringUtils.isEmpty(user.getPassword())
+        || StringUtils.isEmpty(user.getMail())
+        || StringUtils.isEmpty(user.getUsername())
+        ||StringUtils.isEmpty(user.getFirstName())
+        || StringUtils.isEmpty(user.getLastName())){
             throw new EmptyField();
         }
 

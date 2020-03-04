@@ -28,9 +28,6 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private UserService userService;
-
     //Get all
     @GetMapping()
     public List<ProductDto> getAllProducts(){
@@ -69,9 +66,8 @@ public class ProductController {
         }
     }
 
-    //Ajouter un produit
     @PostMapping()
-    public Object ajouterProduit( HttpServletRequest request, @Valid @RequestBody ProductDto product) {
+    public Object addProduct( HttpServletRequest request, @Valid @RequestBody ProductDto product) {
 
         if(product.getTitle().isEmpty()
                 || product.getProductSpecifications() == null
