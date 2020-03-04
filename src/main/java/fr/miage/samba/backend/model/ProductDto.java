@@ -60,6 +60,8 @@ public class ProductDto {
         private String os;
         private String osVersion;
         private String storage;
+        private String model;
+        private String deviceId;
 
         @ScoreCoefficient(value = ScoreConstants.LOW_MEDIUM_PRIORITY)
         private boolean bluetooth;
