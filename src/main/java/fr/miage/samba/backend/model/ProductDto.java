@@ -1,6 +1,7 @@
 package fr.miage.samba.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.internal.NotNull;
 import fr.miage.samba.backend.Annotation.ScoreCoefficient;
 import fr.miage.samba.backend.constants.ScoreConstants;
 import fr.miage.samba.backend.constants.SpecificationsConstants;
@@ -11,7 +12,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +62,8 @@ public class ProductDto {
         private String osVersion;
         private String storage;
         private String model;
+        @NotNull
+        @NotBlank
         private String deviceId;
 
         @ScoreCoefficient(value = ScoreConstants.LOW_MEDIUM_PRIORITY)
@@ -75,7 +78,7 @@ public class ProductDto {
         @ScoreCoefficient(value = ScoreConstants.MEDIUM_PRIORITY)
         private boolean multitouch;
 
-        @ScoreCoefficient(value = ScoreConstants.LOW_PRORITY) //Per tiles
+        @ScoreCoefficient(value = ScoreConstants.HIGH_PRIORITY) //Per tiles
         private boolean[] screen = new boolean[SpecificationsConstants.TILES];
 
         @ScoreCoefficient(value = ScoreConstants.LOW_PRORITY)
