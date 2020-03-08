@@ -1,6 +1,7 @@
 package fr.miage.samba.backend.web.controller;
 
 import fr.miage.samba.backend.Helper.NotationHelper;
+import fr.miage.samba.backend.enums.ShellState;
 import fr.miage.samba.backend.model.ProductDto;
 import fr.miage.samba.backend.Helper.TokenHelper;
 import fr.miage.samba.backend.services.ProductService;
@@ -71,8 +72,8 @@ public class ProductController {
 
         if(product.getTitle().isEmpty()
                 || product.getProductSpecifications() == null
-                || product.getProductSpecifications().getScreenState() == null
-                || product.getProductSpecifications().getShellState() == null
+                || product.getProductSpecifications().getScreenState() == -1
+                || product.getProductSpecifications().getShellState() == -1
                 || product.getProductSpecifications().getButtonsSpecifications() == null
                 || product.getProductSpecifications().getCameraSpecifications() == null){
             throw new EmptyField();

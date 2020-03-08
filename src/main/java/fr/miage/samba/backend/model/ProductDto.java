@@ -96,6 +96,19 @@ public class ProductDto {
         @ScoreCoefficient
         private ShellState shellState;
 
+        public int getScreenState(){
+            if(screenState == null){
+                return -1;
+            }
+            return this.screenState.ordinal();
+        }
+
+        public int getShellState(){
+            if(shellState == null){
+                return -1;
+            }
+            return this.shellState.ordinal();
+        }
 
         public ProductSpecifications(){
         }
